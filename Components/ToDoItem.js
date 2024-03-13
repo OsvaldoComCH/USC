@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Switch } from 'react-native';
 import React from 'react';
 
-function ToDoItem({Item, TrocaEstado, Deleta})
+export default function ToDoItem({Item, TrocaEstado, Deleta})
 {
     return (
         <View style={styles.ToDoItem}>
@@ -12,8 +12,8 @@ function ToDoItem({Item, TrocaEstado, Deleta})
             <Text style={Item.Completado ? styles.CompletedText : styles.Text}>
                 {Item.Text}
             </Text>
-            <TouchableOpacity>
-                <Text></Text>
+            <TouchableOpacity onPress={() => Deleta(Item.Id)}>
+                <Text style={styles.DeleteButton}>Excluir</Text>
             </TouchableOpacity>
         </View>
     );
