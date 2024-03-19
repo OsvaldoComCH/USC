@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, Button, View } from 'react-native';
 import React, {useState} from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ToDoList from './Components/ToDoList';
 import TelaAddTarefa from "./Telas/AddTarefa";
+
 const Stack = createStackNavigator();
 export default function App() {
+	const Nav = useNavigation();
 	const [Tarefas, SetTarefas] = useState([
 		{Id: 1, Text: "Bom Dia", Completado: false},
 		{Id: 2, Text: "Bom Tarde", Completado: false},
@@ -39,6 +41,7 @@ export default function App() {
                                 <Text style={styles.HeaderText}>Lista de Tarefas</Text>
                             </View>
                             <ToDoList Itens={Tarefas} TrocaEstado={TrocaEstado} Deleta={Deleta}/>
+							<Button title='Adiionar Tarefa' onPress={() => Nav.navigate("Addtarefa")}/>
                         </View>
                     }}
                 </Stack.Screen>
