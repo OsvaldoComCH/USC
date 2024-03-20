@@ -9,9 +9,9 @@ const Stack = createStackNavigator();
 export default function App() {
 	const Nav = useNavigation();
 	const [Tarefas, SetTarefas] = useState([
-		{Id: 1, Text: "Bom Dia", Completado: false},
-		{Id: 2, Text: "Bom Tarde", Completado: false},
-		{Id: 3, Text: "Bom Noite", Completado: false}
+		{Id: 1, Nome: "BD", Descricao: "Bom Dia", Data: new Date(Date.now()), Completado: false},
+		{Id: 2, Nome: "BT", Descricao: "Bom Tarde", Data: new Date(Date.now()), Completado: false},
+		{Id: 3, Nome: "BN", Descricao: "Bom Noite", Data: new Date(Date.now()), Completado: false}
 	]);
 	function Deleta(IdTarefa)
 	{
@@ -25,10 +25,11 @@ export default function App() {
 			Tarefas.map((item) => item.Id === IdTarefa ? {...item, Completado: !item.Completado} : item)
 		);
 	};
-    function Add(Text)
+    function Add(Tarefa)
     {
         SetTarefas(
-            [...Tarefas, {id: Date.now(), Text: Text, Completado: false},]
+            [...Tarefas, {Id: Date.now(), Nome: Tarefa.Nome, 
+				Descricao: Tarefa.Descricao, Data: Tarefa.Data, Completado: false},]
         )
     }
 	return (

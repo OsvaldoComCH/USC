@@ -23,7 +23,8 @@ export default function ToDoItem({Item, TrocaEstado, Deleta})
             duration: 1000,
             useNativeDriver: true,
         }).start
-    }, [Item.Completado]);
+    }, [Item.Completado])
+    ;
 
     return (
         <Animated.View style={[styles.container, {opacity: AnimationValue}]}>
@@ -34,7 +35,7 @@ export default function ToDoItem({Item, TrocaEstado, Deleta})
                 />
                 <TouchableOpacity onPress={Expand}>
                     <Text style={Item.Completado ? styles.CompletedText : styles.Text}>
-                        {Item.Tarefa.Nome}
+                        {Item.Nome}
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => Deleta(Item.Id)}>
