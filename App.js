@@ -7,7 +7,8 @@ import TelaAddTarefa from "./Telas/AddTarefa";
 
 const Stack = createStackNavigator();
 export default function App() {
-	const Nav = useNavigation();
+	/*const Nav = useNavigation()
+	<Button title='Adiionar Tarefa' onPress={() => Nav.navigate("Addtarefa")}/>*/
 	const [Tarefas, SetTarefas] = useState([
 		{Id: 1, Nome: "BD", Descricao: "Bom Dia", Data: new Date(Date.now()), Completado: false},
 		{Id: 2, Nome: "BT", Descricao: "Bom Tarde", Data: new Date(Date.now()), Completado: false},
@@ -42,7 +43,6 @@ export default function App() {
                                 <Text style={styles.HeaderText}>Lista de Tarefas</Text>
                             </View>
                             <ToDoList Itens={Tarefas} TrocaEstado={TrocaEstado} Deleta={Deleta}/>
-							<Button title='Adiionar Tarefa' onPress={() => Nav.navigate("Addtarefa")}/>
                         </View>
                     }}
                 </Stack.Screen>

@@ -1,5 +1,6 @@
 import { Animated, StyleSheet, Text, View, TouchableOpacity, Switch, Platform, UIManager, LayoutAnimation } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
+import { PanResponder } from 'react-native';
 
 if(Platform.OS === 'android')
 {
@@ -8,6 +9,25 @@ if(Platform.OS === 'android')
 
 export default function ToDoItem({Item, TrocaEstado, Deleta})
 {
+    const Pan = useRef(new Animated.ValueXY()).current;
+
+    const PResponder = useRef(PanResponder.create({
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: Animated.event([null, {dx: Pan.x}], {useNativeDriver: false}),
+        onPanResponderRelease: (_, gestureState) => {
+            if(gestureState.dx <= -200)
+            {
+                Deleta(Item.Id);
+            }else
+            {
+                Animated.spring(
+                    Pan,
+                    {toValue: {x: 0, y: 0}, useNativeDriver: false}
+                ).start()
+            }
+        }
+    })).current;
+
     const [IsExpanded, SetIsExpanded] = useState(false);
     const AnimationValue = useRef(new Animated.Value(0)).current
 
@@ -27,20 +47,20 @@ export default function ToDoItem({Item, TrocaEstado, Deleta})
     ;
 
     return (
-        <Animated.View style={[styles.container, {opacity: AnimationValue}]}>
+        <Animated.View {... PResponder.panHandlers}
+            style={[Pan.getLayout(), styles.container, {opacity: AnimationValue}]}>
             <View style={styles.ToDoItem}>
                 <Switch
                     value={Item.Completado}
                     onValueChange={() => TrocaEstado(Item.Id)}
                 />
-                <TouchableOpacity onPress={Expand}>
-                    <Text style={Item.Completado ? styles.CompletedText : styles.Text}>
-                        {Item.Nome}
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => Deleta(Item.Id)}>
-                    <Text style={styles.DeleteButton}>Excluir</Text>
-                </TouchableOpacity>
+                <View style={styles.TextContainer}>
+                    <TouchableOpacity onPress={Expand}>
+                        <Text style={Item.Completado ? styles.CompletedText : styles.Text}>
+                            {Item.Nome}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             {IsExpanded && (
                 <View>
@@ -54,6 +74,10 @@ export default function ToDoItem({Item, TrocaEstado, Deleta})
 
 const styles = StyleSheet.create(
     {
+        TextContainer:{
+            flex: 1,
+            alignItems: 'center'
+        },
         container:{
             flexDirection: 'column',
             backgroundColor: "#e0e0e0",
