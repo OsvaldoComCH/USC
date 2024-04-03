@@ -12,7 +12,8 @@ const firebaseConfig = {
   storageBucket: "projetooretorno-4688b.appspot.com",
   messagingSenderId: "976609646777",
   appId: "1:976609646777:web:29fd1113ad9f73f3782368",
-  measurementId: "G-DEJTS78P16"
+  measurementId: "G-DEJTS78P16",
+  databaseURL: "https://projetooretorno-4688b-default-rtdb.firebaseio.com/"
 };
 
 // Initialize Firebase

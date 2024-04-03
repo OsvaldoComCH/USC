@@ -48,7 +48,7 @@ export default function ToDoItem({Item, TrocaEstado, Deleta})
 
     return (
         <Animated.View {... PResponder.panHandlers}
-            style={[Pan.getLayout(), styles.container, {opacity: AnimationValue}]}>
+            style={[{transform: [{translateX: Pan.x}]}, styles.container, {opacity: AnimationValue}]}>
             <View style={styles.ToDoItem}>
                 <Switch
                     value={Item.Completado}

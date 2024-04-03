@@ -1,14 +1,16 @@
-import { StyleSheet, Text, Button, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, {useState} from 'react';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ToDoList from './Components/ToDoList';
 import TelaAddTarefa from "./Telas/AddTarefa";
+import TelaLogin from './Telas/Login';
+import TelaAddUser from './Telas/AddUser';
+import firebase from './services/firebase';
+import { getDatabase, ref, get, update, set, remove } from "firebase/database"
 
 const Stack = createStackNavigator();
 export default function App() {
-	/*const Nav = useNavigation()
-	<Button title='Adiionar Tarefa' onPress={() => Nav.navigate("Addtarefa")}/>*/
 	const [Tarefas, SetTarefas] = useState([
 		{Id: 1, Nome: "BD", Descricao: "Bom Dia", Data: new Date(Date.now()), Completado: false},
 		{Id: 2, Nome: "BT", Descricao: "Bom Tarde", Data: new Date(Date.now()), Completado: false},
@@ -28,14 +30,29 @@ export default function App() {
 	};
     function Add(Tarefa)
     {
-        SetTarefas(
-            [...Tarefas, {Id: Date.now(), Nome: Tarefa.Nome, 
-				Descricao: Tarefa.Descricao, Data: Tarefa.Data, Completado: false},]
-        )
+		const database = getDatabase(firebase);
+		var Id = Date.now().toString();
+		const TarefaRef = ref(database, 'tarefas/');
+		set(TarefaRef, {Id: Date.now(), Nome: Tarefa.Nome, Descricao: Tarefa.Descricao, Data: Tarefa.Data, Completado: false})
+		.then(() =>{
+			SetTarefas(
+				[...Tarefas, {Id: Date.now(), Nome: Tarefa.Nome, Descricao: Tarefa.Descricao, Data: Tarefa.Data, Completado: false},]
+			);
+			console.log("Tarefa adicionada com sucesso.");
+		})
+		.catch((error) =>
+		{
+			console.error("Erro: ", error);
+		})
     }
 	return (
         <NavigationContainer>
             <Stack.Navigator>
+				<Stack.Screen
+					options={{headerShown: false}}
+					name="login"
+					component={TelaLogin}
+				/>
                 <Stack.Screen name="Home" options={{headerShown: false}}>
                     {() =>{
                         <View style={styles.container}>
@@ -51,6 +68,11 @@ export default function App() {
                     name="AddTarefa"
                     component={TelaAddTarefa}
                     initialParams={{AddTarefa: Add}}
+                />
+                <Stack.Screen
+                    options={{headerShown: false}}
+                    name="AddUser"
+                    component={TelaAddUser}
                 />
             </Stack.Navigator>
         </NavigationContainer>
