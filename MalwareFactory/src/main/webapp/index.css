@@ -1,0 +1,12 @@
+div.container
+{
+    width: 650px;
+    background-color: #FFF;
+    position: relative;
+    padding: 40px 70px;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 50%;
+    margin-left: -395px;
+}
