@@ -39,13 +39,13 @@ export default function TelaLogin({ navigation })
                 <TextInput
                     placeholder="E-mail"
                     value={Email}
-                    onChange={(text) => SetEmail(text)}
+                    onChangeText={(text) => SetEmail(text)}
                     style={styles.Input}
                 />
                 <TextInput
                     placeholder="Senha"
                     value={Password}
-                    onChange={(text) => SetPassword(text)}
+                    onChangeText={(text) => SetPassword(text)}
                     secureTextEntry
                     style={styles.Input}
                 />
