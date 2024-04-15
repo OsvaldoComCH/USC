@@ -25,7 +25,6 @@ export default function TelaLogin({ navigation })
             {
                 SetLoginFail(true);
                 console.error("erro: ", error.message);
-                Nav.navigate("Home");
             }
         )
     }
