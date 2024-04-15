@@ -50,14 +50,14 @@ export default function App() {
             <Stack.Navigator>
 				
                 <Stack.Screen name="Home" options={{headerShown: false}}>
-                    {() =>{
+                    {() => (
                         <View style={styles.container}>
                             <View style={styles.Header}>
                                 <Text style={styles.HeaderText}>Lista de Tarefas</Text>
                             </View>
                             <ToDoList Itens={Tarefas} TrocaEstado={TrocaEstado} Deleta={Deleta}/>
                         </View>
-                    }}
+                    )}
                 </Stack.Screen>
 				<Stack.Screen
 					options={{headerShown: false}}
