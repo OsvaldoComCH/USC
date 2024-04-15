@@ -11,11 +11,7 @@ import { getDatabase, ref, get, update, set, remove } from "firebase/database"
 
 const Stack = createStackNavigator();
 export default function App() {
-	const [Tarefas, SetTarefas] = useState([
-		{Nome: "BD", Descricao: "Bom Dia", Data: new Date(Date.now()), Completado: false},
-		{Nome: "BT", Descricao: "Bom Tarde", Data: new Date(Date.now()), Completado: false},
-		{Nome: "BN", Descricao: "Bom Noite", Data: new Date(Date.now()), Completado: false}
-	]);
+	const [Tarefas, SetTarefas] = useState([ ]);
 	function Deleta(IdTarefa)
 	{
 		SetTarefas(
