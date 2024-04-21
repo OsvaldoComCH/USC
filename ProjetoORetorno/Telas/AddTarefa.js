@@ -1,16 +1,17 @@
 import React, {useState} from 'react';
-import { View, Button, TextInput, StyleSheet, Platform } from 'react-native';
+import { View, Button, TextInput, StyleSheet, Platform, Text } from 'react-native';
+import Datetimepicker from '@react-native-community/datetimepicker'
 
-export default function TelaAddTarefa({Nav, route})
+export default function TelaAddTarefa({navigation, route})
 {
-    const [Tarefa, SetTarefa] = useState({Nome: '', Descricao: "", Data: new Date(Date.now())});
+    const [Tarefa, SetTarefa] = useState({Nome: "", Descricao: "", Data: new Date(Date.now())});
     const [ShowDatePicker, SetShowDatePicker] = useState(false);
     
     function Add()
     {
         route.params.AddTarefa(Tarefa);
         SetTarefa({Nome: "", Descricao: "", Data: new Date(Date.now())});
-        Nav.goBack();
+        navigation.goBack();
     }
 
     function SaveDate(event, value)
@@ -25,7 +26,7 @@ export default function TelaAddTarefa({Nav, route})
     return (
         <View style={styles.container}>
             <View style={styles.Header}>
-				<Tarefa style={styles.HeaderText}>Lista de Tarefas</Tarefa>
+				<Text style={styles.HeaderText}>Lista de Tarefas</Text>
 			</View>
             <TextInput
                 style={styles.Input}
@@ -35,10 +36,10 @@ export default function TelaAddTarefa({Nav, route})
             />
             <TextInput
                 style={styles.Input}
-                placeholder="Nome da Tarefa"
+                placeholder="Descrição"
                 multiline={true}
-                value={Tarefa.Nome}
-                onChangeText={(value) => SetTarefa({...Tarefa, Nome: value})}
+                value={Tarefa.Descricao}
+                onChangeText={(value) => SetTarefa({...Tarefa, Descricao: value})}
             />
             {!ShowDatePicker && (
                 <View style={styles.DateButton}>
@@ -48,7 +49,7 @@ export default function TelaAddTarefa({Nav, route})
                 </View>
             )}
             {ShowDatePicker && (
-                <DateTimePicker
+                <Datetimepicker
                     value={Tarefa.Data}
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     onChange={SaveDate}

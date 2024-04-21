@@ -51,7 +51,7 @@ export default function TelaLogin({ navigation })
                 />
                 <Button title="login" onPress={HandleLogin}/>
                 <Pressable onPress={() =>{Nav.navigate("AddUser")}}>
-                    <Text style={styles.Register}>Register Novo Usuário</Text>
+                    <Text style={styles.Register}>Registrar Novo Usuário</Text>
                 </Pressable>
             </View>
         </View>

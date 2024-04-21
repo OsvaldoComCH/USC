@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { Button, FlatList, View } from 'react-native';
+import { Button, FlatList, View, StyleSheet } from 'react-native';
 import ToDoItem from "./ToDoItem.js"
 
 export default function ToDoList({Itens, TrocaEstado, Deleta})
@@ -10,7 +10,7 @@ export default function ToDoList({Itens, TrocaEstado, Deleta})
         Nav.navigate("AddTarefa");
     };
     return (
-        <View>
+        <View style={styles.container}>
             <FlatList
                 data={Itens}
                 renderItem={({item}) => (
@@ -26,3 +26,25 @@ export default function ToDoList({Itens, TrocaEstado, Deleta})
         </View>
     );
 }
+
+const styles = StyleSheet.create(
+	{
+		container: {
+			flex: 1,
+			backgroundColor: '#fff',
+			alignItems: 'center',
+			justifyContent: 'center',
+		},
+		Header: {
+			padding: 50,
+			backgroundColor: '#2020ff',
+			alignItems: 'center',
+		},
+		HeaderText: {
+			paddingTop: 50,
+			color: '#fff',
+      		fontSize: 24,
+      		fontWeight: 'bold',
+    	},
+	}
+);

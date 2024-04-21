@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ToDoList from './Components/ToDoList';
@@ -12,27 +12,87 @@ import { getDatabase, ref, get, update, set, remove } from "firebase/database"
 const Stack = createStackNavigator();
 export default function App() {
 	const [Tarefas, SetTarefas] = useState([ ]);
+
+	useEffect(() =>{
+		const database = getDatabase(firebase);
+		const TarefaRef = ref(database, 'tarefas');
+		get(TarefaRef)
+		.then((snapshot) =>
+		{
+			if(snapshot.exists())
+			{
+				const DB = snapshot.val();
+				for(Id in DB)
+				{
+					SetTarefas((Tarefas) =>
+					[
+						...Tarefas,
+						{
+							Id: Id,
+							Tarefa: {...DB[Id].Tarefa, Data: new Date(DB[Id].Tarefa.Data)}, 
+							Completado: DB[Id].Completado
+						},
+					]);
+				}
+			}else
+			{
+				console.log("Nenhum dado encontrado");
+			}
+		})
+		.catch((error) =>
+			console.log("Erro:", error)
+		);
+	}, []);
+
 	function Deleta(IdTarefa)
 	{
-		SetTarefas(
-			Tarefas.filter((item) => item.Id !== IdTarefa)
-		);
+		const database = getDatabase(firebase);
+		const TarefaRef = ref(database, 'tarefas/' + IdTarefa.toString());
+		remove(TarefaRef)
+		.then(() =>{
+			SetTarefas((Tarefas) =>
+				{
+					let NT = Tarefas.filter((item) => item.Id !== IdTarefa)
+					return NT
+				}
+			);
+			console.log("Tarefa excluida com sucesso.");
+		})
+		.catch((error) =>
+		{
+			console.error("Erro: ", error);
+		})
 	};
 	function TrocaEstado(IdTarefa)
 	{
-		SetTarefas(
-			Tarefas.map((item) => item.Id === IdTarefa ? {...item, Completado: !item.Completado} : item)
-		);
+		const database = getDatabase(firebase);
+		const TarefaRef = ref(database, 'tarefas/' + IdTarefa.toString());
+		const T = Tarefas.find((item) => item.Id === IdTarefa)
+		update(TarefaRef, {Completado: !T.Completado})
+		.then(() =>{
+			SetTarefas((Tarefas) =>
+				{
+					let NT = Tarefas.map((item) => 
+					item.Id === IdTarefa ? {...item, Completado: !item.Completado} : item)
+					return NT
+				}
+			);
+			console.log("Tarefa modificada com sucesso.");
+		})
+		.catch((error) =>
+		{
+			console.error("Erro: ", error);
+		})
 	};
     function Add(Tarefa)
     {
 		const database = getDatabase(firebase);
 		var Id = Date.now().toString();
 		const TarefaRef = ref(database, 'tarefas/' + Id);
-		set(TarefaRef, {Nome: Tarefa.Nome, Descricao: Tarefa.Descricao, Data: Tarefa.Data, Completado: false})
+		set(TarefaRef, {Tarefa: {...Tarefa, Data: Tarefa.Data.toString()}, Completado: false})
 		.then(() =>{
-			SetTarefas(
-				[...Tarefas, {Nome: Tarefa.Nome, Descricao: Tarefa.Descricao, Data: Tarefa.Data, Completado: false},]
+			SetTarefas((Tarefas) =>
+				[...Tarefas, {Id: Id, Tarefa: Tarefa, Completado: false}]
 			);
 			console.log("Tarefa adicionada com sucesso.");
 		})
@@ -44,7 +104,11 @@ export default function App() {
 	return (
         <NavigationContainer>
             <Stack.Navigator>
-				
+				<Stack.Screen
+					options={{headerShown: false}}
+					name="Login"
+					component={TelaLogin}
+				/>
                 <Stack.Screen name="Home" options={{headerShown: false}}>
                     {() => (
                         <View style={styles.container}>
@@ -55,11 +119,6 @@ export default function App() {
                         </View>
                     )}
                 </Stack.Screen>
-				<Stack.Screen
-					options={{headerShown: false}}
-					name="login"
-					component={TelaLogin}
-				/>
                 <Stack.Screen
                     options={{headerShown: false}}
                     name="AddTarefa"
@@ -84,9 +143,9 @@ const styles = StyleSheet.create(
 			justifyContent: 'center',
 		},
 		Header: {
+			padding: 50,
 			backgroundColor: '#2020ff',
 			alignItems: 'center',
-			padding: 20,
 		},
 		HeaderText: {
 			paddingTop: 20,

@@ -3,7 +3,7 @@ import {View, TextInput, Text, Button, StyleSheet} from 'react-native';
 import firebase from '../services/firebase.js'
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
-export default function TelaAddUser({Nav})
+export default function TelaAddUser({navigation})
 {
     const [Email, SetEmail] = useState('');
     const [Password, SetPassword] = useState('');
@@ -15,9 +15,9 @@ export default function TelaAddUser({Nav})
         createUserWithEmailAndPassword(Auth, Email, Password).then(
             (userCredential) =>
             {
-                console.log("Usuário creado com sucesso: ", userCredential.user.email);
+                console.log("Usuário criado com sucesso: ", userCredential.user.email);
                 SetCreateFail(false);
-                Nav.navigate("Login");
+                navigation.navigate("Login");
             }
         ).catch(
             (error) =>
@@ -33,13 +33,13 @@ export default function TelaAddUser({Nav})
             <TextInput
                 placeholder="E-mail"
                 value={Email}
-                onChange={(text) => SetEmail(text)}
+                onChangeText={(text) => SetEmail(text)}
                 style={styles.Input}
             />
             <TextInput
                 placeholder="Senha"
                 value={Password}
-                onChange={(text) => SetPassword(text)}
+                onChangeText={(text) => SetPassword(text)}
                 secureTextEntry={true}
                 style={styles.Input}
             />

@@ -22,7 +22,7 @@ export default function ToDoItem({Item, TrocaEstado, Deleta})
             {
                 Animated.spring(
                     Pan,
-                    {toValue: {x: 0, y: 0}, useNativeDriver: false}
+                    {toValue: {x: 0, y: 0}, useNativeDriver: true}
                 ).start()
             }
         }
@@ -54,18 +54,22 @@ export default function ToDoItem({Item, TrocaEstado, Deleta})
                     value={Item.Completado}
                     onValueChange={() => TrocaEstado(Item.Id)}
                 />
-                <View style={styles.TextContainer}>
-                    <TouchableOpacity onPress={Expand}>
-                        <Text style={Item.Completado ? styles.CompletedText : styles.Text}>
-                            {Item.Nome}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity onPress={Expand}>
+                    <Text style={Item.Completado ? styles.CompletedText : styles.Text}>
+                        {Item.Tarefa.Nome}
+                    </Text>
+                </TouchableOpacity>
             </View>
             {IsExpanded && (
-                <View>
-                    <Text style={styles.Text}><Text style={{fontWeight: 'bold'}}>Data: </Text>{Item.Tarefa.Data.toLocaleString().split(" ")[0]}</Text>
-                    <Text style={styles.Text}><Text style={{fontWeight: 'bold'}}>Descrição: </Text>{Item.Tarefa.Descricao}</Text>
+                <View style={styles.TextContainer}>
+                    <Text style={styles.Text}>
+                        <Text style={{fontWeight: 'bold'}}>Data: </Text>
+                        {Item.Tarefa.Data.toLocaleString().split(" ")[0]}
+                    </Text>
+                    <Text style={styles.Text}>
+                        <Text style={{fontWeight: 'bold'}}>Descrição: </Text>
+                        {Item.Tarefa.Descricao}
+                    </Text>
                 </View>
             )}
         </Animated.View>
@@ -80,9 +84,9 @@ const styles = StyleSheet.create(
         },
         container:{
             flexDirection: 'column',
-            backgroundColor: "#e0e0e0",
+            backgroundColor: "#eee",
             borderBottomWidth: 1,
-            borderBottomColor: "#c0c0c0"
+            borderBottomColor: "#ccc"
         },
         ToDoItem: {
             flexDirection: "row",
@@ -91,7 +95,7 @@ const styles = StyleSheet.create(
             paddingVertical: 10,
             paddingHorizontal: 20,
             borderBottomWidth: 1,
-            borderBottomColor: "#C0C0C0",
+            borderBottomColor: "#Ccc",
         },
         Text: {
             fontSize: 18,
@@ -99,10 +103,10 @@ const styles = StyleSheet.create(
         CompletedText: {
             fontSize: 18,
             textDecorationLine: "line-through",
-            color: "#c0c0c0",
+            color: "#ccc",
         },
         DeleteButton: {
-            color: "#ff0000",
+            color: "#f00",
             fontSize: 18,
         },
     }
