@@ -1,0 +1,28 @@
+Orientadores:
+Roger Lucio de Lima Bassan
+Carlos Eduardo Lopes
+
+Este projeto visa criar um website em HTML, onde poderão ser visualizadas diversas receitas, e realizar seu host em um ambiente cloud.
+
+O preparo de uma sobremesa, embora seja uma tarefa simples, muitas vezes não pode ser feita sem o auxílio de uma receita. No mundo digitalizado onde vivemos hoje, o primeiro lugar onde as pessoas procuram por alguma informação qualquer é na internet, onde a existência de um website especificamente para isso seria muito conveniente.
+Nós acreditamos que estas informações deveriam ser disponibilizadas na internet, para livre uso de qualquer um a quem seja de interesse. Nosso website oferecerá estas receitas de forma gratuita, simples e intuitiva, assim como muitos outros fizeram no passado em chamados "blogs". Este projeto não visa nenhum retorno financeiro, embora algum possa ser alcançado com a exibição de anúncios.
+
+Objetivo Geral:
+Realizar a construção de um website estático em HTML, com diversas receitas disponíveis para visualização pelos usuários.
+
+Específicos:
+Programar um website estático em HTML;
+Pesquisar e documentar as melhores receitas para sobremesas;
+Realizar a estilização do site utilizando CSS;
+Disponibilizar o site para acesso em ambiente nuvem;
+
+
+Formulação do problema:
+HTML (HyperText Markup Language) é a principal linguagem utilizada para a estruturação de conteúdo na web, que define o significado e a estrutura dele. HyperText se refere aos links que geram conexões entre uma página e outra, seja dentro do mesmo site ou em outro. Normalmente, o HTML é reunido com CSS e JavaScript para personalizar a aparência e a funcionalidade do site, respectivamente.
+
+Referencial Teorico:
+
+https://educafrotech.educafro.org.br/documents/html-css-javascript.pdf
+
+Metodologia:4
+A equipe utilizará de diversas referências encontradas na internet para a estruturação do site, seguindo boas práticas de design e programação de conteúdo na web. O site terá uma tela principal, com a listagem das receitas disponíveis, e uma página distinta para cada uma delas. As receitas serão pesquisadas também pela internet, e as melhores e mais completas encontradas serão selecionadas a dedo para serem exibidas no site. 
