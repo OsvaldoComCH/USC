@@ -49,7 +49,7 @@ const TelaAddPost = ({navigation, route}) =>
 			setAvailableTags(data);
 		})
 		.catch((error) => {console.error(error)})
-	})
+	}, [])
 
 	return(
 		<View style={styles.container}>
