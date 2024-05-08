@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import Header from '../Componentes/Header';
 import firebase from '../Servicos/firebase'
@@ -8,12 +8,48 @@ import {Picker} from '@react-native-picker/picker'
 const TelaAddPost = ({navigation, route}) =>
 {
 	const [selectedTag, setSelectedTag] = useState('')
-	const availableTags = [{_id: 1, name: 'technology'}, {_id: 2, name: 'famous-quotes'}]
+	const [availableTags, setAvailableTags] = useState([])
 
 	const searchQuotes = async () =>
 	{
-		console.log('Implementar o uso da API para buscar: '+selectedTag)
+		url = "";
+		if(selectedTag.length === 0)
+		{
+			url = "https://api.quotable.io/random"
+		}else
+		{
+			url = "https://api.quotable.io/random?tags=" + selectedTag
+		}
+		fetch(url)
+		.then((response) => response.json())
+		.then((data) => 
+		{
+			const Database = getDatabase(firebase);
+			var PostID = Date.now().toString();
+			const UserRef = ref(Database, "users/" + route.params.uid + "/posts/" + PostID)
+			update(UserRef, {legenda: data[0].content})
+			.then(() =>
+			{
+				console.log("Post criado: " + data[0].content);
+				navigation.navigate("posts", {uid: route.params.uid})
+			})
+			.catch((error) =>
+			{
+				console.error("Erro: ", error);
+			})
+		})
+		.catch((error) => {console.error(error)})
 	}
+	useEffect(() =>
+	{
+		fetch("https://api.quotable.io/tags")
+		.then((response) => response.json())
+		.then((data) => 
+		{
+			setAvailableTags(data);
+		})
+		.catch((error) => {console.error(error)})
+	})
 
 	return(
 		<View style={styles.container}>
