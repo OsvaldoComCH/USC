@@ -10,6 +10,8 @@ const TelaAddPost = ({navigation, route}) =>
 	const [selectedTag, setSelectedTag] = useState('')
 	const [availableTags, setAvailableTags] = useState([])
 
+	const Image = route.params.image ? route.params.image : null;
+
 	const searchQuotes = async () =>
 	{
 		url = "";
@@ -50,12 +52,17 @@ const TelaAddPost = ({navigation, route}) =>
 		})
 		.catch((error) => {console.error(error)})
 	}, [])
+	console.log(Image);
 
 	return(
 		<View style={styles.container}>
 			<Header showNav={true} navigation={navigation} route={route} />
+			{Image ? <Image source={{uri: Image}} style={styles.image}/>: null}
 			<View style={styles.contentContainer}>
-				<Text>Selecione a tag do seu post</Text>
+				<Button
+					onPress={() => {navigation.navigate("camera", {uid: route.params.uid})}}
+					title="Tirar foto"
+				/>
 				<Picker
 					selectedValue={selectedTag}
 					onValueChange={(itemValue, itemIndex) => setSelectedTag(itemValue)}
@@ -71,6 +78,7 @@ const TelaAddPost = ({navigation, route}) =>
 				<Button
 					onPress={searchQuotes}
 					title="Gerar post"
+					color='grey'
 				/>
 			</View>
 		</View>
@@ -79,7 +87,7 @@ const TelaAddPost = ({navigation, route}) =>
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 0.7,
+		flex: 1,
 	},
 	contentContainer: {
 		flex: 1,
@@ -87,10 +95,17 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 	},
 	tagItem: {
+		flexDirection: "row",
+		alignItems: "center",
 		color: 'black',
 		fontWeight: 'bold',
-		fontSize: 12
+		fontSize: 12,
+		marginBottom: 8
 	},
+	image: {
+		flex: 1,
+		resizeMode: "contain"
+	}
 });
 
 export default TelaAddPost;
