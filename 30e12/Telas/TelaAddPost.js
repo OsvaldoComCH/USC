@@ -3,12 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import Header from '../Componentes/Header';
 import firebase from '../Servicos/firebase'
 import { getDatabase, ref, update } from "firebase/database"
+import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from 'firebase/storage';
 import {Picker} from '@react-native-picker/picker'
 
 const TelaAddPost = ({navigation, route}) =>
 {
 	const [selectedTag, setSelectedTag] = useState('')
 	const [availableTags, setAvailableTags] = useState([])
+	const [PostFailed, SetPostFailed] = useState(false);
 
 	const Image = route.params.image ? route.params.image : null;
 
@@ -24,23 +26,38 @@ const TelaAddPost = ({navigation, route}) =>
 		}
 		fetch(url)
 		.then((response) => response.json())
-		.then((data) => 
+		.then(async (data) => 
 		{
 			const Database = getDatabase(firebase);
+			const Storage = getStorage(firebase);
 			var PostID = Date.now().toString();
+			var ImageURL = "";
+			if(Image)
+			{
+				const ImageRef = storageRef(Storage, 'images/' + PostID + '.jpg');
+				const ImageData = await fetch(Image).then((response) => response.blob());
+				const UploadTask = await uploadBytes(ImageRef, ImageData);
+				ImageURL = await getDownloadURL(ImageRef);
+			}
 			const UserRef = ref(Database, "users/" + route.params.uid + "/posts/" + PostID)
-			update(UserRef, {legenda: data[0].content})
+			update(UserRef, {legenda: data[0].content, foto: ImageURL})
 			.then(() =>
 			{
 				console.log("Post criado: " + data[0].content);
+				SetPostFailed(false);
 				navigation.navigate("posts", {uid: route.params.uid})
 			})
 			.catch((error) =>
 			{
+				SetPostFailed(true);
 				console.error("Erro: ", error);
 			})
 		})
-		.catch((error) => {console.error(error)})
+		.catch((error) =>
+		{
+			SetPostFailed(true);
+			console.error(error)
+		})
 	}
 	useEffect(() =>
 	{
@@ -57,6 +74,7 @@ const TelaAddPost = ({navigation, route}) =>
 	return(
 		<View style={styles.container}>
 			<Header showNav={true} navigation={navigation} route={route} />
+			{PostFailed ? <Text style={styles.PostFailed}>Falha ao Enviar o Post</Text>: null}
 			{Image ? <Image source={{uri: Image}} style={styles.image}/>: null}
 			<View style={styles.contentContainer}>
 				<Button
@@ -105,6 +123,10 @@ const styles = StyleSheet.create({
 	image: {
 		flex: 1,
 		resizeMode: "contain"
+	},
+	PostFailed: {
+		fontWeight: 'bold',
+		color: 'red'
 	}
 });
 
