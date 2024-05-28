@@ -5,12 +5,14 @@ import firebase from '../Servicos/firebase'
 import { getDatabase, ref, update } from "firebase/database"
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from 'firebase/storage';
 import {Picker} from '@react-native-picker/picker'
+import * as Location from 'expo-location'
 
 const TelaAddPost = ({navigation, route}) =>
 {
-	const [selectedTag, setSelectedTag] = useState('')
-	const [availableTags, setAvailableTags] = useState([])
+	const [selectedTag, setSelectedTag] = useState('');
+	const [availableTags, setAvailableTags] = useState([]);
 	const [PostFailed, SetPostFailed] = useState(false);
+	const [Location, SetLocation] = useState(null);
 
 	const Image = route.params.image ? route.params.image : null;
 
@@ -28,30 +30,37 @@ const TelaAddPost = ({navigation, route}) =>
 		.then((response) => response.json())
 		.then(async (data) => 
 		{
-			const Database = getDatabase(firebase);
-			const Storage = getStorage(firebase);
-			var PostID = Date.now().toString();
-			var ImageURL = "";
-			if(Image)
+			if(data.length > 0)
 			{
-				const ImageRef = storageRef(Storage, 'images/' + PostID + '.jpg');
-				const ImageData = await fetch(Image).then((response) => response.blob());
-				const UploadTask = await uploadBytes(ImageRef, ImageData);
-				ImageURL = await getDownloadURL(ImageRef);
+				const Database = getDatabase(firebase);
+				const Storage = getStorage(firebase);
+				var PostID = Date.now().toString();
+				var ImageURL = "";
+				if(Image)
+				{
+					const ImageRef = storageRef(Storage, 'images/' + PostID + '.jpg');
+					const ImageData = await fetch(Image).then((response) => response.blob());
+					const UploadTask = await uploadBytes(ImageRef, ImageData);
+					ImageURL = await getDownloadURL(ImageRef);
+				}
+				const UserRef = ref(Database, "users/" + route.params.uid + "/posts/" + PostID)
+				update(UserRef, {legenda: data[0].content, foto: ImageURL, geolocalizacao: Location})
+				.then(() =>
+				{
+					console.log("Post criado: " + data[0].content);
+					SetPostFailed(false);
+					navigation.navigate("posts", {uid: route.params.uid})
+				})
+				.catch((error) =>
+				{
+					SetPostFailed(true);
+					console.error("Erro: ", error);
+				})
+			}else
+			{
+				console.log("Sem citação nessa tag")
+				SetPostFailed(true)
 			}
-			const UserRef = ref(Database, "users/" + route.params.uid + "/posts/" + PostID)
-			update(UserRef, {legenda: data[0].content, foto: ImageURL})
-			.then(() =>
-			{
-				console.log("Post criado: " + data[0].content);
-				SetPostFailed(false);
-				navigation.navigate("posts", {uid: route.params.uid})
-			})
-			.catch((error) =>
-			{
-				SetPostFailed(true);
-				console.error("Erro: ", error);
-			})
 		})
 		.catch((error) =>
 		{
@@ -59,7 +68,7 @@ const TelaAddPost = ({navigation, route}) =>
 			console.error(error)
 		})
 	}
-	useEffect(() =>
+	const searchTags = () =>
 	{
 		fetch("https://api.quotable.io/tags")
 		.then((response) => response.json())
@@ -68,8 +77,24 @@ const TelaAddPost = ({navigation, route}) =>
 			setAvailableTags(data);
 		})
 		.catch((error) => {console.error(error)})
+	}
+
+	const getLocation = async () =>
+	{
+		let { status } = await Location.requestForegroundPermissionAsync();
+		if(status !== 'granted')
+		{
+			return (<View><Text style={styles.PostFailed}>Permissão de Localização negada</Text></View>)
+		}
+		let CurrentLocation = await Location.getCurrentPositionAsync({});
+		SetLocation({latitude: CurrentLocation.coords.latitude, longitude: CurrentLocation.coords.longitude})
+	}
+
+	useEffect(() =>
+	{
+		searchTags();
+		getLocation();
 	}, [])
-	console.log(Image);
 
 	return(
 		<View style={styles.container}>
